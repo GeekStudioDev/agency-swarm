@@ -45,6 +45,16 @@ class MessageOutput:
 
         console.print(str(self.content), style=color)
 
+    def return_formatted(self):
+        emoji = self.get_sender_emoji()
+        header = emoji + self.get_formatted_header()
+        color = self.hash_names_to_color()
+        return {
+            "header": header,
+            "content": str(self.content),
+            "style": color
+        }
+
     def get_formatted_header(self):
         if self.msg_type == "function":
             text = f"{self.sender_name} 🛠️ Executing Function"

@@ -144,6 +144,7 @@ class Agency:
             text = input("USER: ")
 
             try:
+                print("INTO LooP RuN")
                 gen = self.main_thread.get_completion(message=text)
                 while True:
                     message = next(gen)

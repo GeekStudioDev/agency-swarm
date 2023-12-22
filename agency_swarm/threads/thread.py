@@ -13,11 +13,17 @@ class Thread:
     thread = None
     run = None
 
-    def __init__(self, agent: Literal[Agent, User], recipient_agent: Agent):
+    def __init__(self, agent: Literal[Agent, User], recipient_agent: Agent, thread_id: str = None):
         self.agent = agent
         self.recipient_agent = recipient_agent
         self.client = get_openai_client()
-
+        thread = self.client.beta.threads.retrieve(thread_id)
+        if thread:
+            self.thread = thread
+            self.id = thread_id
+        else:
+            self.thread = self.client.beta.threads.create()
+            self.id = self.thread.id
     def get_completion(self, message: str, yield_messages=True):
         if not self.thread:
             if self.id:

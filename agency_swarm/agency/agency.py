@@ -18,7 +18,7 @@ console = Console()
 
 class Agency:
 
-    def __init__(self, agency_chart, shared_instructions=""):
+    def __init__(self, agency_chart, shared_instructions="", session_id=None):
         """
         Initializes the Agency object, setting up agents, threads, and core functionalities.
 
@@ -38,7 +38,7 @@ class Agency:
             self._read_instructions(shared_instructions)
         else:
             self.shared_instructions = shared_instructions
-
+        
         self._parse_agency_chart(agency_chart)
         self._create_send_message_tools()
         self._init_agents()

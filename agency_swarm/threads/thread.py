@@ -17,7 +17,11 @@ class Thread:
         self.agent = agent
         self.recipient_agent = recipient_agent
         self.client = get_openai_client()
-        thread = self.client.beta.threads.retrieve(thread_id)
+        try:
+            thread = self.client.beta.threads.retrieve(thread_id)
+        except:
+            thread = None
+
         if thread:
             self.thread = thread
             self.id = thread_id

@@ -18,7 +18,7 @@ console = Console()
 
 class Agency:
 
-    def __init__(self, agency_chart, shared_instructions="", session_id=None):
+    def __init__(self, agency_chart, shared_instructions="", agents_and_threads = None, main_thread = None):
         """
         Initializes the Agency object, setting up agents, threads, and core functionalities.
 
@@ -32,6 +32,7 @@ class Agency:
         self.agents = []
         self.agents_and_threads = {}
 
+
         if os.path.isfile(os.path.join(self.get_class_folder_path(), shared_instructions)):
             self._read_instructions(os.path.join(self.get_class_folder_path(), shared_instructions))
         elif os.path.isfile(shared_instructions):
@@ -42,10 +43,22 @@ class Agency:
         self._parse_agency_chart(agency_chart)
         self._create_send_message_tools()
         self._init_agents()
-        self._init_threads()
+        # Init threads
+        if agents_and_threads is not None:
+            for agent_name, threads in agents_and_threads.items():
+                for other_agent, items in threads.items():
+                    self.agents_and_threads[agent_name][other_agent] = Thread(self.get_agent_by_name(items["agent"]),
+                                                                              self.get_agent_by_name(
+                                                                                  items["recipient_agent"]))
+        else:
+            self._init_threads()
 
         self.user = User()
-        self.main_thread = Thread(self.user, self.ceo)
+        # Init main thread
+        if main_thread is not None:
+            self.main_thread = main_thread
+        else:
+            self.main_thread = Thread(self.user, self.ceo)
 
     def return_data(self):
         """
@@ -394,7 +407,7 @@ class Agency:
             agent.add_instructions(self.shared_instructions)
             agent.init_oai()
 
-    def _init_threads(self):
+    def _init_threads(self, agents_and_threads=None):
         """
         Initializes threads for communication between agents within the agency.
 
@@ -405,6 +418,9 @@ class Agency:
         Output Parameters:
         This method does not return any value but updates the agents_and_threads attribute with initialized Thread objects.
         """
+        if agents_and_threads is not None:
+            self.agents_and_threads = agents_and_threads
+
         for agent_name, threads in self.agents_and_threads.items():
             for other_agent, items in threads.items():
                 self.agents_and_threads[agent_name][other_agent] = Thread(self.get_agent_by_name(items["agent"]),

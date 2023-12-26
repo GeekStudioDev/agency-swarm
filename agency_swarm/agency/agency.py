@@ -46,10 +46,10 @@ class Agency:
         # Init threads
         if agents_and_threads is not None:
             for agent_name, threads in agents_and_threads.items():
-                for other_agent, items in threads.items():
-                    self.agents_and_threads[agent_name][other_agent] = Thread(self.get_agent_by_name(items["agent"]),
+                for other_agent, thread in threads.items():
+                    self.agents_and_threads[agent_name][other_agent] = Thread(self.get_agent_by_name(agent_name),
                                                                               self.get_agent_by_name(
-                                                                                  items["recipient_agent"]))
+                                                                                  other_agent))
         else:
             self._init_threads()
 

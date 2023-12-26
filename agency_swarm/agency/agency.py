@@ -56,7 +56,7 @@ class Agency:
         self.user = User()
         # Init main thread
         if main_thread is not None:
-            self.main_thread = main_thread
+            self.main_thread = Thread(self.user, self.ceo, main_thread)
         else:
             self.main_thread = Thread(self.user, self.ceo)
 

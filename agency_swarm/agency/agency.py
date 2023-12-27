@@ -49,7 +49,7 @@ class Agency:
                 for other_agent, thread in threads.items():
                     self.agents_and_threads[agent_name][other_agent] = Thread(self.get_agent_by_name(agent_name),
                                                                               self.get_agent_by_name(
-                                                                                  other_agent))
+                                                                                  other_agent),thread)
         else:
             self._init_threads()
 

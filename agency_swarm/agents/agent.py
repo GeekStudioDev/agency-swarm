@@ -50,7 +50,7 @@ class Agent():
         self.name = name if name else self.__class__.__name__
         self.description = description
         self.instructions = instructions
-        self.tools = tools if tools else []
+        self.tools = tools[:] if tools is not None else []
         self.files_folder = files_folder
         self.file_ids = file_ids if file_ids else []
         self.metadata = metadata if metadata else {}
@@ -235,7 +235,8 @@ class Agent():
                         with open(f_path, 'rb') as f:
                             file_id = self.client.files.create(file=f, purpose="assistants").id
                             self.file_ids.append(file_id)
-                            self._add_id_to_file(f_path, file_id)
+                            f.close()
+                        self._add_id_to_file(f_path, file_id)
 
                     if Retrieval not in self.tools:
                         print("Detected files without Retrieval. Adding Retrieval tool...")

@@ -90,20 +90,20 @@ class Agent():
             return self
 
         # load assistant from settings
-        # if os.path.exists(path):
-        #     with open(path, 'r') as f:
-        #         settings = json.load(f)
-        #         # iterate settings and find the assistant with the same name
-        #         for assistant_settings in settings:
-        #             if assistant_settings['name'] == self.name:
-        #                 self.assistant = self.client.beta.assistants.retrieve(assistant_settings['id'])
-        #                 self.id = assistant_settings['id']
-        #                 # update assistant if parameters are different
-        #                 if not self._check_parameters(self.assistant.model_dump()):
-        #                     print("Updating assistant... " + self.name)
-        #                     self._update_assistant()
-        #                 self._update_settings()
-        #                 return self
+        if os.path.exists(path):
+            with open(path, 'r') as f:
+                settings = json.load(f)
+                # iterate settings and find the assistant with the same name
+                for assistant_settings in settings:
+                    if assistant_settings['name'] == self.name:
+                        self.assistant = self.client.beta.assistants.retrieve(assistant_settings['id'])
+                        self.id = assistant_settings['id']
+                        # update assistant if parameters are different
+                        if not self._check_parameters(self.assistant.model_dump()):
+                            print("Updating assistant... " + self.name)
+                            self._update_assistant()
+                        self._update_settings()
+                        return self
         # create assistant if settings.json does not exist or assistant with the same name does not exist
         self.assistant = self.client.beta.assistants.create(
             name=self.name,

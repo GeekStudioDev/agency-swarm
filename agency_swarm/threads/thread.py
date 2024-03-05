@@ -7,9 +7,6 @@ from agency_swarm.messages import MessageOutput
 from agency_swarm.user import User
 from agency_swarm.util.oai import get_openai_client
 import os
-from db.infrastructure.mongo.mongo_generic_repository import MongoGenericRepository
-from schemas.pydantic.entities.message_entity import MessageEntity
-messages = MongoGenericRepository("messages", "bots", os.getenv("MONGO_CONNECTION_STRING"))
 
 
 class Thread:
@@ -51,17 +48,25 @@ class Thread:
             content=message,
             file_ids=message_files if message_files else [],
         )
-        created_at = time.time()*1000
-        message_data: MessageEntity = MessageEntity(
-            id=created_message.id,
-            message=message,
-            file_ids=message_files if message_files else [],
-            created_at=created_at,
-            updated_at=created_at,
-            user_id="",
-            thread_id=self.id
-        )
-        messages.insert_one(message_data.model_dump_json())
+        # created_at = time.time()*1000
+        # message_data: MessageEntity = MessageEntity(
+        #     id=created_message.id,
+        #     message=message,
+        #     file_ids=message_files if message_files else [],
+        #     created_at=created_at,
+        #     updated_at=created_at,
+        #     user_id="",
+        #     thread_id=self.id
+        # )
+        # messages.insert_one({
+        #     "id": created_message.id,
+        #     "message": message,
+        #     "file_ids": message_files if message_files else [],
+        #     "created_at": created_at,
+        #     "updated_at": created_at,
+        #     "user_id": "",
+        #     "thread_id": self.id
+        # })
 
         if yield_messages:
             yield MessageOutput("text", self.agent.name, self.recipient_agent.name, message)
